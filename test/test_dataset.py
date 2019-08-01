@@ -53,7 +53,7 @@ def test_SMT():
 	from easydict import EasyDict
 	config_dict={
 		'batch_size': 24,
-		'sparse': True,
+		'sparse': False,
 		'dataset_div': 10,
 	}
 	config=EasyDict(config_dict)
