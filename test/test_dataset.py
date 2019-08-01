@@ -45,9 +45,6 @@ def test_baseDataset_Loader(filted_dataset=None):
 		filted_dataset=dataset[torch.tensor(indices)]
 		filted_dataset.transform=T.ToDense(num_nodes)  #add 'adj' attribute
 
-	assert dataset.__repr__()=='SMT(2688)'
-	assert filted_dataset.__repr__()=='SMT(2562)'
-
 	assert ('adj' in dataset[0])==False
 	assert ('adj' in filted_dataset[0])==True
 
