@@ -13,13 +13,13 @@ import torch_geometric.transforms as T
 
 #####test#####
 
-from easydict import EasyDict
-config_dict={
-	'batch_size': 24,
-	'sparse': True,
-	'dataset_div': 10,
-}
-config=EasyDict(config_dict)
+# from easydict import EasyDict
+# config_dict={
+# 	'batch_size': 24,
+# 	'sparse': True,
+# 	'dataset_div': 10,
+# }
+# config=EasyDict(config_dict)
 #####test#####
 
 class SMTDataLoader:
@@ -51,9 +51,6 @@ class SMTDataLoader:
 
 		dataset=TUDataset(path,name,use_node_attr=True)
 		dataset.data.edge_attr=None
-
-		if dataset.data.x is None:
-			pass
 
 		if not sparse:
 			num_nodes=max_num_nodes=0

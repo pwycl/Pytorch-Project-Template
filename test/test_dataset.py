@@ -62,7 +62,8 @@ def test_SMT():
 	dataset=smt.get_dataset('SMT', 
 		sparse=config.sparse, dataset_div=config.dataset_div)
 
-	test_baseDataset_Loader(dataset)
+	# test_baseDataset_Loader(dataset)  # expensive mem cost
+	assert ('adj' in dataset[0])==True
 
 	for batch in smt.train_loader:
 		assert batch.keys==['x', 'y', 'adj', 'mask']
