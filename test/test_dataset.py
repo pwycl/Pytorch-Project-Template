@@ -16,7 +16,7 @@ def test_baseDataset_Loader(filted_dataset=None):
 
 	assert len(dataset)==2688
 	assert dataset.num_features==20
-	assert dataset.num_classes=2
+	assert dataset.num_classes==2
 	assert dataset.__repr__()=='SMT(2688)'
 	assert dataset[0].keys==['x', 'edge_index', 'y']   #==len(data.keys)  
 	assert len(dataset.shuffle())==2688
