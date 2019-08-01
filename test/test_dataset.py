@@ -5,7 +5,7 @@ import random
 import torch
 from torch_geometric.datasets import TUDataset
 from torch_geometric.data import DataLoader
-import torch_geometrc.transforms as T
+import torch_geometric.transforms as T
 
 from datasets.SMT import SMTDataLoader
 
