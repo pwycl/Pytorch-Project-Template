@@ -42,7 +42,7 @@ class SMTDataLoader:
 
 		return train_loader, val_loader, test_loader
 
-	def get_dataset(name, sparse=True, dataset_div=None):
+	def get_dataset(self, name, sparse=True, dataset_div=None):
 		path=osp.join(osp.dirname(osp.realpath(__file__)), '..','data',name)
 		try:
 			shutil.copytree('../input/smt',path)
