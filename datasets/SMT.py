@@ -30,7 +30,7 @@ class SMTDataLoader:
 		self.train_loader, self.val_loader, self.test_loader=self.get_loader()
 
 	def get_loader(self):		
-		dataset=get_dataset('SMT', sparse=config.sparse, dataset_div=config.dataset_div)
+		dataset=self.get_dataset('SMT', sparse=config.sparse, dataset_div=config.dataset_div)
 		n=(len(dataset)+9)//10
 		test_dataset=dataset[:n]
 		val_dataset=dataset[n:2*n]
