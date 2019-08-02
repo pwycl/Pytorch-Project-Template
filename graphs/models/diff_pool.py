@@ -29,7 +29,7 @@ class Block(torch.nn.Module):
 
 class DiffPool(torch.nn.Module):
 	def __init__(self,dataset,num_layers,hidden,ratio=0.25):
-		super(DiffPoll,self).__init__()
+		super(DiffPool,self).__init__()
 
 		self.num_layers, self.hidden=num_layers,hidden
 
