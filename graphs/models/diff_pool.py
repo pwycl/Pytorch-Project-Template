@@ -25,7 +25,7 @@ class Block(torch.nn.Module):
 	def forward(self,x,adj,mask=None,add_loop=True):  #x: [batch_size, num_nodes, in_channels]
 		x1=F.relu(self.conv1(x,adj,mask,add_loop))    #x1: [batch_size, num_nodes,hidden_channels]
 		x2=F.relu(self.conv2(x1,adj,mask,add_loop))	  #x2: [batch_size,num_nodes, out_channels]
-		return self.lin(self.jump[x1,x2])			  # [batch_size,num_nodes,out_channels]
+		return self.lin(self.jump([x1,x2]))			  # [batch_size,num_nodes,out_channels]
 
 class DiffPool(torch.nn.Module):
 	def __init__(self,dataset,num_layers,hidden,ratio=0.25):
