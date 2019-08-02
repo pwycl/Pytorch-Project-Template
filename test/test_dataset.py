@@ -65,6 +65,8 @@ def test_SMT():
 	dataset=smt.get_dataset('SMT', 
 		sparse=config.sparse, dataset_div=config.dataset_div)
 
+	assert max(dataset.data.num_nodes) < (2788794/2)
+
 	# test_baseDataset_Loader(dataset)  # expensive mem cost
 	assert ('adj' in dataset[0])==True
 
