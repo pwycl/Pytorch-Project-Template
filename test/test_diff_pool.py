@@ -37,7 +37,7 @@ def test_Diff_Pool():
 	from datasets.SMT import SMTDataLoader
 
 	smt=SMTDataLoader(config)
-	dataset=smt.get_dataset('SMT',sparse=config,sparse,dataset_div=config.dataset_div)
+	dataset=smt.get_dataset('SMT',sparse=config.sparse,dataset_div=config.dataset_div)
 	model=DiffPool(dataset,config.num_layers,config.hidden)
 	for batch in smt.train_loader:
 		assert list(batch.x.size())[1:]==(dataset[0].num_nodes,dataset[0].num_features)
