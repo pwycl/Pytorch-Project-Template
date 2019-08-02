@@ -27,7 +27,7 @@ class Block(torch.nn.Module):
 		x2=F.relu(self.conv2(x1,adj,mask,add_loop))	  #x2: [batch_size,num_nodes, out_channels]
 		return self.lin(self.jump[x1,x2])			  # [batch_size,num_nodes,out_channels]
 
-class DiffPoll(torch.nn.Module):
+class DiffPool(torch.nn.Module):
 	def __init__(self,dataset,num_layers,hidden,ratio=0.25):
 		super(DiffPoll,self).__init__()
 
