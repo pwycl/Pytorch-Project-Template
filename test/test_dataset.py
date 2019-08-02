@@ -6,9 +6,11 @@ import torch
 from torch_geometric.datasets import TUDataset
 from torch_geometric.data import DataLoader
 import torch_geometric.transforms as T
+import pytest
 
 from datasets.SMT import SMTDataLoader
 
+@pytest.mark.unfinished
 def test_baseDataset_Loader(filted_dataset=None):
 	root=osp.join('/','tmp', str(random.randrange(sys.maxsize)))
 	shutil.copytree('../input/smt', root)
@@ -49,6 +51,7 @@ def test_baseDataset_Loader(filted_dataset=None):
 	assert ('adj' in filted_dataset[0])==True
 
 
+@pytest.mark.finished
 def test_SMT():
 	from easydict import EasyDict
 	config_dict={
