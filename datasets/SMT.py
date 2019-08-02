@@ -29,16 +29,16 @@ class SMTDataLoader:
 		self.num_nodes=None
 		self.train_loader, self.val_loader, self.test_loader=self.get_loader()
 
-	def get_loader(self):		
-		dataset=self.get_dataset('SMT', sparse=config.sparse, dataset_div=config.dataset_div)
+	def get_loader(self):		#paras config->self.config
+		dataset=self.get_dataset('SMT', sparse=self.config.sparse, dataset_div=self.config.dataset_div)
 		n=(len(dataset)+9)//10
 		test_dataset=dataset[:n]
 		val_dataset=dataset[n:2*n]
 		train_dataset=dataset[2*n:]
 
-		train_loader=DenseDataLoader(train_dataset,batch_size=config.batch_size)
-		val_loader=DenseDataLoader(val_dataset,batch_size=config.batch_size)
-		test_loader=DenseDataLoader(test_dataset,batch_size=config.batch_size)
+		train_loader=DenseDataLoader(train_dataset,batch_size=self.config.batch_size)
+		val_loader=DenseDataLoader(val_dataset,batch_size=self.config.batch_size)
+		test_loader=DenseDataLoader(test_dataset,batch_size=self.config.batch_size)
 
 		return train_loader, val_loader, test_loader
 
