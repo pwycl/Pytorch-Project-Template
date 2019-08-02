@@ -59,7 +59,8 @@ class SMTDataLoader:
 				max_num_nodes=max(data.num_nodes,max_num_nodes)
 
 			#Filter out a few really large graphs in order to apply DiffPool
-			self.num_nodes=min(int(num_nodes/len(dataset)*5), max_num_nodes)
+			num_nodes=min(int(num_nodes/len(dataset)*5), max_num_nodes)
+			self.num_nodes=num_nodes
 			indices=[]
 			for i, data in enumerate(dataset):
 				if data.num_nodes<=num_nodes:
