@@ -40,9 +40,9 @@ def test_Diff_Pool():
 	dataset=smt.get_dataset('SMT',sparse=config.sparse,dataset_div=config.dataset_div)
 	model=DiffPool(dataset,config.num_layers,config.hidden)
 	for batch in smt.train_loader:
-		assert list(batch.x.size())[1:]==(smt.num_nodes,dataset[0].num_features)
-		assert list(batch.adj.size())[1:]==(smt.num_nodes,smt.num_nodes)
-		assert list(batch.mask.size())[1:]==(smt.num_nodes)
+		assert list(batch.x.size())[1:]==[smt.num_nodes,dataset[0].num_features]
+		assert list(batch.adj.size())[1:]==[smt.num_nodes,smt.num_nodes]
+		assert list(batch.mask.size())[1:]==[smt.num_nodes]
 		out=model(batch)
-		assert list(out.size())[1:]==(dataset.num_classes)
+		assert list(out.size())[1:]==[dataset.num_classes]
 		break
