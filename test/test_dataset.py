@@ -10,48 +10,48 @@ import pytest
 
 from datasets.SMT import SMTDataLoader
 
-@pytest.mark.unfinished
-def test_baseDataset_Loader(filted_dataset=None):
-	root=osp.join('/','tmp', str(random.randrange(sys.maxsize)))
-	shutil.copytree('../input/smt', root)
-	dataset=TUDataset(root,'SMT')
+# @pytest.mark.unfinished
+# def test_baseDataset_Loader(filted_dataset=None):
+# 	root=osp.join('/','tmp', str(random.randrange(sys.maxsize)))
+# 	shutil.copytree('../input/smt', root)
+# 	dataset=TUDataset(root,'SMT')
 
-	assert len(dataset)==2688
-	assert dataset.num_features==20
-	assert dataset.num_classes==2
-	assert dataset.__repr__()=='SMT(2688)'
-	assert dataset[0].keys==['x', 'edge_index', 'y']   #==len(data.keys)  
-	assert len(dataset.shuffle())==2688
+# 	assert len(dataset)==2688
+# 	assert dataset.num_features==20
+# 	assert dataset.num_classes==2
+# 	assert dataset.__repr__()=='SMT(2688)'
+# 	assert dataset[0].keys==['x', 'edge_index', 'y']   #==len(data.keys)  
+# 	assert len(dataset.shuffle())==2688
 
-	loader=DataLoader(dataset,batch_size=len(dataset))
-	assert loader.dataset.__repr__()=='SMT(2688)'
-	for batch in loader:
-		assert batch.num_graphs==2688
-		assert batch.num_nodes==sum([data.num_nodes for data in dataset])  #2788794
-		assert batch.num_edges==sum([data.num_edges for data in dataset])  #13347768
-		assert batch.keys==['x','edge_index','y','batch']
+# 	loader=DataLoader(dataset,batch_size=len(dataset))
+# 	assert loader.dataset.__repr__()=='SMT(2688)'
+# 	for batch in loader:
+# 		assert batch.num_graphs==2688
+# 		assert batch.num_nodes==sum([data.num_nodes for data in dataset])  #2788794
+# 		assert batch.num_edges==sum([data.num_edges for data in dataset])  #13347768
+# 		assert batch.keys==['x','edge_index','y','batch']
 
-	num_nodes=sum(dataset.data.num_nodes)
-	max_num_nodes=max(dataset.data.num_nodes)
-	num_nodes=min(int(num_nodes/len(dataset)*5),max_num_nodes)
+# 	num_nodes=sum(dataset.data.num_nodes)
+# 	max_num_nodes=max(dataset.data.num_nodes)
+# 	num_nodes=min(int(num_nodes/len(dataset)*5),max_num_nodes)
 
-	assert num_nodes==5187
-	assert max_num_nodes==34623
+# 	assert num_nodes==5187
+# 	assert max_num_nodes==34623
 
-	indices=[]
-	for i,data in enumerate(dataset):
-		if data.num_nodes<num_nodes:
-			indices.append(i)
+# 	indices=[]
+# 	for i,data in enumerate(dataset):
+# 		if data.num_nodes<num_nodes:
+# 			indices.append(i)
 
-	if filted_dataset==None:
-		filted_dataset=dataset[torch.tensor(indices)]
-		filted_dataset.transform=T.ToDense(num_nodes)  #add 'adj' attribute
+# 	if filted_dataset==None:
+# 		filted_dataset=dataset[torch.tensor(indices)]
+# 		filted_dataset.transform=T.ToDense(num_nodes)  #add 'adj' attribute
 
-	assert ('adj' in dataset[0])==False
-	assert ('adj' in filted_dataset[0])==True
+# 	assert ('adj' in dataset[0])==False
+# 	assert ('adj' in filted_dataset[0])==True
 
 
-@pytest.mark.finished
+# @pytest.mark.finished
 def test_SMT():
 	from easydict import EasyDict
 	config_dict={
