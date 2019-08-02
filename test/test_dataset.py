@@ -72,24 +72,10 @@ def test_SMT():
 
 	for batch in smt.train_loader:
 		assert batch.keys==['x', 'y', 'adj', 'mask']
-		assert list(batch.x.size())==[config.batch_size,smt.num_nodes, dataset.data.num_features] # [24, 5187, 20]
-		assert list(batch.adj.size())==[config.batch_size,smt.num_nodes,smt.num_nodes] # [24,5187, 5187]
-		assert list(batch.mask.size())==[config.batch_size,smt.num_nodes]
-		assert list(batch.y.size())==[config.batch_size,1]
-
-	for batch in smt.val_loader:
-		assert batch.keys==['x', 'y', 'adj', 'mask']
-		assert list(batch.x.size())==[config.batch_size,smt.num_nodes, dataset.data.num_features] # [24, 5187, 20]
-		assert list(batch.adj.size())==[config.batch_size,smt.num_nodes,smt.num_nodes] # [24,5187, 5187]
-		assert list(batch.mask.size())==[config.batch_size,smt.num_nodes]
-		assert list(batch.y.size())==[config.batch_size,1]
-
-	for batch in smt.test_loader:
-			assert batch.keys==['x', 'y', 'adj', 'mask']
-			assert list(batch.x.size())==[config.batch_size,smt.num_nodes, dataset.data.num_features] # [24, 5187, 20]
-			assert list(batch.adj.size())==[config.batch_size,smt.num_nodes,smt.num_nodes] # [24,5187, 5187]
-			assert list(batch.mask.size())==[config.batch_size,smt.num_nodes]
-			assert list(batch.y.size())==[config.batch_size,1]
+		assert list(batch.x.size())[1:]==[smt.num_nodes, dataset.data.num_features] # [24, 5187, 20]
+		assert list(batch.adj.size())[1:]==[smt.num_nodes,smt.num_nodes] # [24,5187, 5187]
+		assert list(batch.mask.size())[1:]==[smt.num_nodes]
+		assert list(batch.y.size())[1:]==[1]
 
 
 
