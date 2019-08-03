@@ -59,8 +59,8 @@ class DiffPool(torch.nn.Module):
 		self.lin1.reset_parameters()
 		self.lin2.reset_parameters()
 
-	def forward(self,x,adj,mask):#data):
-		# x, adj, mask=data.x, data.adj, data.mask               # x:[batch_size,num_nodes,in_channels]
+	def forward(self, data):
+		x, adj, mask=data.x, data.adj, data.mask               # x:[batch_size,num_nodes,in_channels]
 
 		s=self.pool_block1(x,adj,mask,add_loop=True)           # x:[batch_size, num_nodes, c_num_nodes]
 		x=F.relu(self.embed_block1(x,adj,mask,add_loop=True))  # s:[batch_size, num_nodes, hidden]
