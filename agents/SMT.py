@@ -17,7 +17,7 @@ class SMTAgent(BaseAgent):
 		self.model=DiffPool(self.smt_loader.train_loader.dataset,
 						config.num_layers,config.hidden)
 		self.loss=nn.NLLLoss()
-		self.optimizer=optim.Adam(model.parameters(),
+		self.optimizer=optim.Adam(self.model.parameters(),
 						lr=self.config.learning_rate,weight_decay=self.config.weight_decay)
 
 		#initialize counter
