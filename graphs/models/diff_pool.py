@@ -75,12 +75,11 @@ class DiffPool(torch.nn.Module):
 			if i<len(self.embed_blocks)-1:
 				x,adj,_,_=dense_diff_pool(x,adj,s)			   # x: [batch_size,cc_num_nodes, hidden]
 															   # adj: [batch_size,cc_num_nodes,cc_num_nodes]
-		self.x=x													   
 		x=self.jump(xs)										#x: [batch_size,len(self.embed_blocks)+1)*hidden]
 		x=F.relu(self.lin1(x))								#x: [batch_size,hidden]
 		x=F.dropout(x,p=0.5,training=self.training)
 		x=self.lin2(x)										#x: [batch_size,dataset.num_classes]
 		return F.log_softmax(x,dim=-1)
 
-	def __repr__(self):
-		return self.__class__.__name__
+	# def __repr__(self):
+	# 	return self.__class__.__name__
