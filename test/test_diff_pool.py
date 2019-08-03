@@ -45,3 +45,7 @@ def test_Diff_Pool():
 		assert list(batch.mask.size())[1:]==[smt.num_nodes]
 		out=model(batch)
 		assert list(out.size())[1:]==[dataset.num_classes]
+
+if __name__ == '__main__':
+	test_pyg_diff_pool()
+	test_Diff_Pool()
