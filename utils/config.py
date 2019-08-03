@@ -50,8 +50,9 @@ def get_config_from_json(json_file):
             # EasyDict allows to access dict values as attributes (works recursively).
             config = EasyDict(config_dict)
             return config, config_dict
-        except ValueError:
+        except ValueError as e:
             print("INVALID JSON file format.. Please provide a good json file")
+            print(e)
             exit(-1)
 
 
