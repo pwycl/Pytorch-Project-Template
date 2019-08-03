@@ -36,8 +36,8 @@ class SMTAgent(BaseAgent):
 		if self.cuda:
 			torch.cuda.manual_seed(self.manual_seed)
 			self.device=torch.device('cuda')
-			self.model=self.model.to(device)
-			self.loss=self.loss.to(device)
+			self.model=self.model.to(self.device)
+			self.loss=self.loss.to(self.device)
 			self.logger.info("Program will run on *****GPU-CUDA*****")
 			print_cuda_statistics()
 		else:
@@ -114,7 +114,7 @@ class SMTAgent(BaseAgent):
 		correct=0
 		with torch.no_grad():
 			for data in self.smt_loader.val_loader:
-				data=data.to(device)
+				data=data.to(self.device)
 				output=self.model(data)
 				test_loss+=F.nll_loss(output,data.y.view(-1),size_average=False).item()
 				pred=output.max(1)[1]
