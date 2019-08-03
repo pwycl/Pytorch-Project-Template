@@ -45,4 +45,3 @@ def test_Diff_Pool():
 		assert list(batch.mask.size())[1:]==[smt.num_nodes]
 		out=model(batch)
 		assert list(out.size())[1:]==[dataset.num_classes]
-		break
