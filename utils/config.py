@@ -51,7 +51,7 @@ def get_config_from_json(json_file):
             config = EasyDict(config_dict)
             return config, config_dict
         except ValueError as e:
-            print("INVALID JSON file format.. Please provide a good json file")
+            print("INVALID JSON file format.. Please provide a good json file, maybe sublime use tab, try to change to space")
             print(e)
             exit(-1)
 

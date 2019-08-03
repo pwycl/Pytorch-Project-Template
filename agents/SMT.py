@@ -14,7 +14,7 @@ class SMTAgent(BaseAgent):
 		super().__init__(config)
 
 		self.smt_loader=SMTDataLoader(config)
-		self.model=DiffPool(smt_loader.train_loader.dataset,
+		self.model=DiffPool(self.smt_loader.train_loader.dataset,
 						config.num_layers,config.hidden)
 		self.loss=nn.NLLLoss()
 		self.optimizer=optim.Adam(model.parameters(),
