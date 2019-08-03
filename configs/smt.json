@@ -5,7 +5,7 @@
 
   "cuda": true,
   "seed": 1,
-  "batch_size": 24,
+  "batch_size": 16,
   "learning_rate":0.01,
   "weight_decay":0,
   "max_epoch": 20,
