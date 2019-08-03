@@ -6,7 +6,7 @@ from torch_geometric.nn import dense_diff_pool
 from graphs.models.diff_pool import DiffPool
 
 config_dict={
-	'batch_size':24,
+	'batch_size':5,
 	'sparse':False,
 	'dataset_div':10,
 	'num_nodes':5187,
