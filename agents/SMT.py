@@ -94,6 +94,7 @@ class SMTAgent(BaseAgent):
 		"""
 		self.model.train()
 		for batch_idx, data in enumerate(self.smt_loader.train_loader):
+			data=data.to(self.device)
 			self.optimizer.zero_grad()
 			output=self.model(data)
 			loss=self.loss(output,data.y.view(-1))
