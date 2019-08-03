@@ -2,6 +2,7 @@ from agents.base import BaseAgent
 from datasets.SMT import SMTDataLoader
 from graphs.models.diff_pool import DiffPool
 
+import tqdm
 import torch
 from torch import nn
 import torch.optim as optim
@@ -93,7 +94,7 @@ class SMTAgent(BaseAgent):
 		:return:
 		"""
 		self.model.train()
-		for batch_idx, data in enumerate(self.smt_loader.train_loader):
+		for batch_idx, data in tqdm.tqdm(enumerate(self.smt_loader.train_loader)):
 			data=data.to(self.device)
 			self.optimizer.zero_grad()
 			output=self.model(data)
