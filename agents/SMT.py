@@ -1,4 +1,4 @@
-from agent.base import BaseAgent
+from agents.base import BaseAgent
 from datasets.SMT import SMTDataLoader
 from graphs.models.diff_pool import DiffPool
 
