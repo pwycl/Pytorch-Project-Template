@@ -15,5 +15,5 @@
 	"sparse":false,
 	"dataset_div":10,
 	"num_layers":5,
-	"hidden":64,
+	"hidden":64
 }
