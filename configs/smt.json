@@ -5,7 +5,7 @@
 
   "cuda": true,
   "seed": 1,
-  "batch_size": 16,
+  "batch_size": 64,
   "learning_rate":0.01,
   "weight_decay":0,
   "max_epoch": 20,
@@ -13,7 +13,7 @@
   "checkpoint_file":"checkpoint.pth.tar",
 
   "sparse":false,
-  "dataset_div":1,
+  "dataset_div":"",
   "num_layers":5,
   "hidden":64
 }
