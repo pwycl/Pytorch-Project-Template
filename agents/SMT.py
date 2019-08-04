@@ -118,7 +118,7 @@ class SMTAgent(BaseAgent):
 			for data in self.smt_loader.val_loader:
 				data=data.to(self.device)
 				output=self.model(data)
-				test_loss+=F.nll_loss(output,data.y.view(-1),size_average=False).item()
+				test_loss+=F.nll_loss(output,data.y.view(-1),reduction='sum').item()
 				pred=output.max(1)[1]
 				correct+=pred.eq(data.y.view_as(pred)).sum().item()
 
