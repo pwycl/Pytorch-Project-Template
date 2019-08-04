@@ -13,7 +13,7 @@
   "checkpoint_file":"checkpoint.pth.tar",
 
   "sparse":false,
-  "dataset_div":"",
+  "dataset_div":null,
   "num_layers":5,
   "hidden":64
 }
