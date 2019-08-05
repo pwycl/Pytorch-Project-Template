@@ -14,9 +14,13 @@ import torch_geometric.transforms as T
 class SMTDataLoader:
 	def __init__(self, config):
 		self.config=config
-
 		self.num_nodes=None
-		self.train_loader, self.val_loader, self.test_loader=self.get_loader()
+
+		if config.folds != None:
+			self.set_loader(self.get_loader())
+
+	def set_loader(self,loader):
+		self.train_loader,self.val_loader,self.test_loader=loader
 
 	def get_loader(self):		#paras config->self.config
 		dataset=self.get_dataset('SMT', sparse=self.config.sparse, dataset_div=self.config.dataset_div)

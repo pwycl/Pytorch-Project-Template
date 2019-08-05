@@ -51,6 +51,18 @@ class SMTAgent(BaseAgent):
 		# Summary Writer
 		self.summary_writer=None
 
+	def reset_parameters(self):
+		self.model.to(self.device).reset_parameters()
+		self.optimizer=optim.Adam(
+			self.model.parameters(),
+			lr=self.config.learning_rate,
+			weight_decay=self.config.weight_decay
+			)
+
+		self.current_epoch=0
+		self.current_iteration=0
+
+
 	def load_checkpoint(self,file_name):
 		"""
 		Latest checkpoint loader
@@ -68,13 +80,26 @@ class SMTAgent(BaseAgent):
 		"""
 		pass
 
+	def run_k_folds(self):
+		for fold, dataloader in enumerate(
+			self.smt_loader.k_fold_loader_generator(self.config.folds)):
+
+			self.reset_parameters()
+			self.smt_loader.set_loader(dataloader)
+			self.logger.info('Folds {}:'.format(fold))
+			self.train()
+
+
 	def run(self):
 		"""
 		The main operator
 		:return:
 		"""
 		try:
-			self.train()
+			if self.config.folds != None:
+				self.run_k_folds()
+			else:
+				self.train()
 		except KeyboardInterrupt:
 			self.logger.info("You have entered CTRL+c.. Wait to finalize")
 
