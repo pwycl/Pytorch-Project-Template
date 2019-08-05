@@ -52,7 +52,7 @@ class SMTAgent(BaseAgent):
 
 	def reset_parameters(self):
 		self.model=DiffPool(self.smt_loader.train_loader.dataset,
-							config.num_layers,config.hidden)
+							self.config.num_layers,self.config.hidden)
 		if self.cuda:
 			self.model.to(self.device)
 
