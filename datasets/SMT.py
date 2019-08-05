@@ -87,7 +87,7 @@ class SMTDataLoader:
 		"""
 
 	# using generator to yield the train/val/test_loader 
-	def k_fold_loader_generater(self,folds):
+	def k_fold_loader_generator(self,folds):
 		dataset=self.get_dataset('SMT',sparse=self.config.sparse, dataset_div=self.config.dataset_div)
 		train_indices,val_indices,test_indices=self.get_k_fold_indices(folds,len(dataset))
 
