@@ -15,16 +15,15 @@ class SMTAgent(BaseAgent):
 		super().__init__(config)
 
 		self.smt_loader=SMTDataLoader(config)
-		self.model=DiffPool(self.smt_loader.train_loader.dataset,
-						config.num_layers,config.hidden)
+		# self.model=DiffPool(self.smt_loader.train_loader.dataset,
+		# 				config.num_layers,config.hidden)
 		self.loss=nn.NLLLoss()
-		self.optimizer=optim.Adam(self.model.parameters(),
-						lr=self.config.learning_rate,weight_decay=self.config.weight_decay)
+		# self.optimizer=optim.Adam(self.model.parameters(),
+		# 				lr=self.config.learning_rate,weight_decay=self.config.weight_decay)
 
 		#initialize counter
-		self.current_epoch=0
-		self.current_iteration=0
-		self.best_metric=0
+		# self.current_epoch=0
+		# self.current_iteration=0
 
 		#set cuda flag
 		self.is_cuda=torch.cuda.is_available()
@@ -37,7 +36,7 @@ class SMTAgent(BaseAgent):
 		if self.cuda:
 			torch.cuda.manual_seed(self.manual_seed)
 			self.device=torch.device('cuda')
-			self.model=self.model.to(self.device)
+			# self.model=self.model.to(self.device)
 			self.loss=self.loss.to(self.device)
 			self.logger.info("Program will run on *****GPU-CUDA*****")
 			print_cuda_statistics()
@@ -52,7 +51,11 @@ class SMTAgent(BaseAgent):
 		self.summary_writer=None
 
 	def reset_parameters(self):
-		self.model.to(self.device).reset_parameters()
+		self.model=DiffPool(self.smt_loader.train_loader.dataset,
+							config.num_layers,config.hidden)
+		if self.cuda:
+			self.model.to(self.device)
+
 		self.optimizer=optim.Adam(
 			self.model.parameters(),
 			lr=self.config.learning_rate,
@@ -84,8 +87,8 @@ class SMTAgent(BaseAgent):
 		for fold, dataloader in enumerate(
 			self.smt_loader.k_fold_loader_generator(self.config.folds)):
 
-			self.reset_parameters()
 			self.smt_loader.set_loader(dataloader)
+			self.reset_parameters()
 			self.logger.info('Folds {}:'.format(fold))
 			self.train()
 
@@ -99,6 +102,7 @@ class SMTAgent(BaseAgent):
 			if self.config.folds != None:
 				self.run_k_folds()
 			else:
+				self.reset_parameters()
 				self.train()
 		except KeyboardInterrupt:
 			self.logger.info("You have entered CTRL+c.. Wait to finalize")
