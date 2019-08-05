@@ -14,7 +14,7 @@
 
   "sparse":false,
   "dataset_div":null,
-  "num_layers":5,
+  "num_pools":1,
   "hidden":64,
   "folds":10
 }

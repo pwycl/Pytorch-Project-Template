@@ -28,10 +28,10 @@ class Block(torch.nn.Module):
 		return self.lin(self.jump([x1,x2]))			  # [batch_size,num_nodes,out_channels]
 
 class DiffPool(torch.nn.Module):
-	def __init__(self,dataset,num_layers,hidden,ratio=0.25):
+	def __init__(self,dataset,num_pools,hidden,ratio=0.25):
 		super(DiffPool,self).__init__()
 
-		self.num_layers, self.hidden=num_layers,hidden
+		self.num_pools, self.hidden=num_pools,hidden
 
 		num_nodes=ceil(ratio*dataset[0].num_nodes)
 		self.embed_block1=Block(dataset.num_features,hidden,hidden)
@@ -39,7 +39,7 @@ class DiffPool(torch.nn.Module):
 
 		self.embed_blocks=torch.nn.ModuleList()
 		self.pool_blocks=torch.nn.ModuleList()
-		for i in range((num_layers//2)-1):
+		for i in range(num_pools-1):
 			num_nodes=ceil(ratio*num_nodes)
 			self.embed_blocks.append(Block(hidden,hidden,hidden))
 			self.pool_blocks.append(Block(hidden,hidden,num_nodes))

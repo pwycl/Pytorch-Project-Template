@@ -15,15 +15,7 @@ class SMTAgent(BaseAgent):
 		super().__init__(config)
 
 		self.smt_loader=SMTDataLoader(config)
-		# self.model=DiffPool(self.smt_loader.train_loader.dataset,
-		# 				config.num_layers,config.hidden)
 		self.loss=nn.NLLLoss()
-		# self.optimizer=optim.Adam(self.model.parameters(),
-		# 				lr=self.config.learning_rate,weight_decay=self.config.weight_decay)
-
-		#initialize counter
-		# self.current_epoch=0
-		# self.current_iteration=0
 
 		#set cuda flag
 		self.is_cuda=torch.cuda.is_available()
@@ -52,7 +44,7 @@ class SMTAgent(BaseAgent):
 
 	def reset_parameters(self):
 		self.model=DiffPool(self.smt_loader.train_loader.dataset,
-							self.config.num_layers,self.config.hidden)
+							self.config.num_pools,self.config.hidden)
 		if self.cuda:
 			self.model.to(self.device)
 
