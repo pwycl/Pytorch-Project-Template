@@ -16,5 +16,5 @@
   "dataset_div":null,
   "num_layers":5,
   "hidden":64,
-  "folds":null
+  "folds":10
 }
