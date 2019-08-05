@@ -16,7 +16,7 @@ class SMTDataLoader:
 		self.config=config
 		self.num_nodes=None
 
-		if config.folds != None:
+		if config.folds == None:
 			self.set_loader(self.get_loader())
 
 	def set_loader(self,loader):
