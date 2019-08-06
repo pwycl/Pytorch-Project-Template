@@ -40,10 +40,6 @@ class SMTAgent(BaseAgent):
             torch.manual_seed(self.manual_seed)
             self.logger.info("Program will run on *****CPU*****\n")
 
-        self.load_checkpoint(self.config.checkpoint_file)
-        # Summary Writer
-        self.summary_writer = None
-
     def reset_parameters(self):
         self.model = DiffPool(self.smt_loader.train_loader.dataset,
                               self.config.num_pools, self.config.hidden)
