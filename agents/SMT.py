@@ -142,16 +142,12 @@ class SMTAgent(BaseAgent):
                     self.current_epoch, loss.item()))
             self.current_iteration += 1
 
-    def validate(self):
-        """
-        One cycle of model validation
-        :return:
-        """
+    def evaluate(self, data_loader):
         self.model.eval()
         test_loss = 0
         correct = 0
         with torch.no_grad():
-            for data in self.smt_loader.val_loader:
+            for data in data_loader:
                 data = data.to(self.device)
                 output = self.model(data)
                 test_loss += F.nll_loss(
@@ -160,13 +156,31 @@ class SMTAgent(BaseAgent):
                 pred = output.max(1)[1]
                 correct += pred.eq(data.y.view_as(pred)).sum().item()
 
-        test_loss /= len(self.smt_loader.val_loader.dataset)
-        self.logger.info(
-            '\nVal set: Average loss: {:.4f}, '.format(test_loss,)
-            + 'Accuracy: {}/{} ({:.0f}%)\n'.format(
-                correct, len(self.smt_loader.val_loader.dataset),
-                100.*correct/len(self.smt_loader.val_loader.dataset)
-                ))
+        test_loss /= len(data_loader.dataset)
+        log_info = ('\nAverage loss: {:.4f}, '
+                    'Accuracy: {}/{} ({:.0f}%)\n')
+        log_info = log_info.format(
+            test_loss, correct, len(data_loader.dataset),
+            100.*correct/len(data_loader.dataset)
+        )
+        return log_info
+
+    def validate(self):
+        """
+        One cycle of model validation
+        :return:
+        """
+        log_info = self.evaluate(
+            data_loader=self.smt_loader.val_loader
+        )
+        self.logger.info('Val set: '+log_info)
+
+    def test_checkpoint(self):
+        self.reset_parameters()
+        log_info = self.evaluate(
+            data_loader=self.smt_loader.test_loader
+        )
+        self.logger.info('Test set: '+log_info)
 
     def finalize(self):
         """
