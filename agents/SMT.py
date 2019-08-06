@@ -177,6 +177,7 @@ class SMTAgent(BaseAgent):
 
     def test_checkpoint(self):
         self.reset_parameters()
+        self.load_checkpoint()
         log_info = self.evaluate(
             data_loader=self.smt_loader.test_loader
         )
