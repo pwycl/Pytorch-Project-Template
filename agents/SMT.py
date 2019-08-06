@@ -76,7 +76,7 @@ class SMTAgent(BaseAgent):
                     self.config.checkpoint_dir))
             self.logger.info("**First time need to train**")
         else:
-            self.model.load_state_dict(checkpoint)
+            self.model.load_state_dict(checkpoint['state_dict'])
             self.logger.info(
                 "Checkpoint loaded successfully from '{}'".format(
                     self.config.checkpoint_dir))
