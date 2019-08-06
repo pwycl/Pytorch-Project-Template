@@ -59,7 +59,7 @@ class SMTAgent(BaseAgent):
         self.current_epoch = 0
         self.current_iteration = 0
 
-    def load_checkpoint(self, file_name):
+    def load_checkpoint(self, file_name='checkpoint.pth.tar'):
         """
         Latest checkpoint loader
         :param file_name: name of the checkpoint file
