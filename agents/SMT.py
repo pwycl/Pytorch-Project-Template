@@ -166,10 +166,11 @@ class SMTAgent(BaseAgent):
 
         test_loss /= len(self.smt_loader.val_loader.dataset)
         self.logger.info(
-            '\nVal set: Average loss: {:.4f}, '
+            '\nVal set: Average loss: {:.4f}, '.format(test_loss,)
             + 'Accuracy: {}/{} ({:.0f}%)\n'.format(
-                test_loss, correct, len(self.smt_loader.val_loader.dataset),
-                100.*correct/len(self.smt_loader.val_loader.dataset)))
+                correct, len(self.smt_loader.val_loader.dataset),
+                100.*correct/len(self.smt_loader.val_loader.dataset)
+                ))
 
     def finalize(self):
         """
