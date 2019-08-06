@@ -16,5 +16,5 @@
   "dataset_div":null,
   "num_pools":1,
   "hidden":64,
-  "folds":10
+  "folds":null
 }
