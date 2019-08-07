@@ -1,3 +1,4 @@
+import os.path as osp
 import shutil
 
 import tqdm
@@ -63,7 +64,7 @@ class SMTAgent(BaseAgent):
         :param file_name: name of the checkpoint file
         :return:
         """
-        filename = self.config.checkpoint_dir+file_name
+        filename = osp.join(self.config.checkpoint_dir, file_name)
         try:
             self.logger.info(
                 "Loading checkpoint '{}'".format(filename))
@@ -79,7 +80,7 @@ class SMTAgent(BaseAgent):
                 "Checkpoint loaded successfully from '{}'".format(
                     self.config.checkpoint_dir))
 
-    def save_checkpoint(self, file_name="checkpoint.pth.tar", is_best=0):
+    def save_checkpoint(self, file_name, is_best=0):
         """
         Checkpoint saver
         :param file_name: name of the checkpoint file
@@ -92,8 +93,9 @@ class SMTAgent(BaseAgent):
         }
         torch.save(state, self.config.checkpoint_dir+file_name)
         if is_best:
-            shutil.copyfile(self.config.checkpoint_dir+file_name,
-                            self.config.checkpoint_dir+'model_best.pth.tar')
+            shutil.copyfile(osp.join(self.config.checkpoint_dir, file_name),
+                            osp.join(self.config.checkpoint_dir,
+                                     'best', file_name))
 
     def run_k_folds(self):
         for fold, dataloader in enumerate(
@@ -103,7 +105,8 @@ class SMTAgent(BaseAgent):
             self.smt_loader.set_loader(dataloader)
             self.reset_parameters()
             self.logger.info('Folds {}:'.format(fold))
-            self.train()
+            filename = '{}_checkpoint.pth.tar'.format(fold)
+            self.train(checkpoint_filename=filename)
 
     def run(self):
         """
@@ -121,7 +124,7 @@ class SMTAgent(BaseAgent):
         except KeyboardInterrupt:
             self.logger.info("You have entered CTRL+c.. Wait to finalize")
 
-    def train(self):
+    def train(self, checkpoint_filename='checkpoint.pth.tar'):
         """
         Main training loop
         :return:
@@ -132,7 +135,10 @@ class SMTAgent(BaseAgent):
             is_best = val_acc > self.best_val_acc
             if is_best:
                 self.best_val_acc = val_acc
-                self.save_checkpoint(is_best=is_best)
+                self.save_checkpoint(
+                    file_name=checkpoint_filename,
+                    is_best=is_best
+                )
             self.current_epoch += 1
 
     def train_one_epoch(self):
