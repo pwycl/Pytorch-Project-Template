@@ -1,6 +1,4 @@
-from agents.base import BaseAgent
-from datasets.SMT import SMTDataLoader
-from graphs.models.diff_pool import DiffPool
+import shutil
 
 import tqdm
 import torch
@@ -9,6 +7,9 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 from utils.misc import print_cuda_statistics
+from agents.base import BaseAgent
+from datasets.SMT import SMTDataLoader
+from graphs.models.diff_pool import DiffPool
 
 
 class SMTAgent(BaseAgent):
@@ -54,8 +55,9 @@ class SMTAgent(BaseAgent):
 
         self.current_epoch = 0
         self.current_iteration = 0
+        self.best_val_acc = 0
 
-    def load_checkpoint(self, file_name='checkpoint.pth.tar'):
+    def load_checkpoint(self, file_name='model_best.pth.tar'):
         """
         Latest checkpoint loader
         :param file_name: name of the checkpoint file
@@ -89,11 +91,15 @@ class SMTAgent(BaseAgent):
             'state_dict': self.model.state_dict(),
         }
         torch.save(state, self.config.checkpoint_dir+file_name)
+        if is_best:
+            shutil.copyfile(self.config.checkpoint_dir+file_name,
+                            self.config.checkpoint_dir+'model_best.pth.tar')
 
     def run_k_folds(self):
         for fold, dataloader in enumerate(
                 self.smt_loader.k_fold_loader_generator(self.config.folds)):
 
+            self.fold = fold
             self.smt_loader.set_loader(dataloader)
             self.reset_parameters()
             self.logger.info('Folds {}:'.format(fold))
@@ -110,6 +116,8 @@ class SMTAgent(BaseAgent):
             else:
                 self.reset_parameters()
                 self.train()
+            self.logger.info(
+                "\nBest validate set accuracy: {}".format(self.best_val_acc))
         except KeyboardInterrupt:
             self.logger.info("You have entered CTRL+c.. Wait to finalize")
 
@@ -120,7 +128,11 @@ class SMTAgent(BaseAgent):
         """
         for epoch in range(1, self.config.max_epoch+1):
             self.train_one_epoch()
-            self.validate()
+            val_acc = self.validate()
+            is_best = val_acc > self.best_val_acc
+            if is_best:
+                self.best_val_acc = val_acc
+                self.save_checkpoint(is_best=is_best)
             self.current_epoch += 1
 
     def train_one_epoch(self):
@@ -157,31 +169,34 @@ class SMTAgent(BaseAgent):
                 correct += pred.eq(data.y.view_as(pred)).sum().item()
 
         test_loss /= len(data_loader.dataset)
+        acc = correct/len(data_loader.dataset)
         log_info = ('\nAverage loss: {:.4f}, '
                     'Accuracy: {}/{} ({:.0f}%)\n')
         log_info = log_info.format(
             test_loss, correct, len(data_loader.dataset),
-            100.*correct/len(data_loader.dataset)
+            100.*acc
         )
-        return log_info
+        return log_info, acc
 
     def validate(self):
         """
         One cycle of model validation
         :return:
         """
-        log_info = self.evaluate(
+        log_info, acc = self.evaluate(
             data_loader=self.smt_loader.val_loader
         )
         self.logger.info('Val set: '+log_info)
+        return acc
 
     def test_checkpoint(self):
         self.reset_parameters()
         self.load_checkpoint()
-        log_info = self.evaluate(
+        log_info, acc = self.evaluate(
             data_loader=self.smt_loader.test_loader
         )
         self.logger.info('Test set: '+log_info)
+        return acc
 
     def finalize(self):
         """
