@@ -8,6 +8,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 from utils.misc import print_cuda_statistics
+from utils.generate_class_weights import calculate_class_weights
 from agents.base import BaseAgent
 from datasets.SMT import SMTDataLoader
 from graphs.models.diff_pool import DiffPool
@@ -17,8 +18,11 @@ class SMTAgent(BaseAgent):
     def __init__(self, config):
         super().__init__(config)
 
+        class_weights = self.smt_loader.train_loader.dataset.data.y.numpy()
+        self.class_weights = torch.from_numpy(class_weights)
         self.smt_loader = SMTDataLoader(config)
-        self.loss = nn.NLLLoss()
+        self.loss = nn.NLLLoss(
+            calculate_class_weights(weight=self.class_weights))
 
         # set cuda flag
         self.is_cuda = torch.cuda.is_available()
@@ -170,7 +174,8 @@ class SMTAgent(BaseAgent):
                 output = self.model(data)
                 test_loss += F.nll_loss(
                     output,
-                    data.y.view(-1), reduction='sum').item()
+                    data.y.view(-1), reduction='sum',
+                    weight=self.class_weights).item()
                 pred = output.max(1)[1]
                 correct += pred.eq(data.y.view_as(pred)).sum().item()
 
