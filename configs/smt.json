@@ -2,6 +2,7 @@
   "exp_name":"SMT_exp_0",
   "agent":"SMTAgent",
   "mode": "train",
+  "dataset":"SMT",
 
   "cuda": true,
   "seed": 1,
