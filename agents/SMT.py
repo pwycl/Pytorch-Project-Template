@@ -18,9 +18,9 @@ class SMTAgent(BaseAgent):
     def __init__(self, config):
         super().__init__(config)
 
+        self.smt_loader = SMTDataLoader(config)
         class_weights = self.smt_loader.train_loader.dataset.data.y.numpy()
         self.class_weights = torch.from_numpy(class_weights)
-        self.smt_loader = SMTDataLoader(config)
         self.loss = nn.NLLLoss(
             calculate_class_weights(weight=self.class_weights))
 
