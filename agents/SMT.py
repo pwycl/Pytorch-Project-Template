@@ -58,7 +58,7 @@ class SMTAgent(BaseAgent):
         self.current_iteration = 0
         self.best_val_acc = 0
 
-    def load_checkpoint(self, file_name='model_best.pth.tar'):
+    def load_checkpoint(self, file_name='best_model_best.pth.tar'):
         """
         Latest checkpoint loader
         :param file_name: name of the checkpoint file

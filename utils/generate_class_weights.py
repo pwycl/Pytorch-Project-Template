@@ -19,7 +19,8 @@ from utils.voc_utils import make_dataset
 
 
 class VOC(data.Dataset):
-    def __init__(self, mode, data_root, joint_transform=None, sliding_crop=None, transform=None, target_transform=None):
+    def __init__(self, mode, data_root, joint_transform=None,
+                 sliding_crop=None, transform=None, target_transform=None):
         self.imgs = make_dataset(mode, data_root)
         if len(self.imgs) == 0:
             raise RuntimeError('Found 0 images, please check the data set')
@@ -32,7 +33,8 @@ class VOC(data.Dataset):
     def __getitem__(self, index):
         if self.mode == 'test':
             img_path, img_name = self.imgs[index]
-            img = Image.open(os.path.join(img_path, img_name + '.jpg')).convert('RGB')
+            img = Image.open(os.path.join(
+                img_path, img_name + '.jpg')).convert('RGB')
             if self.transform is not None:
                 img = self.transform(img)
             return img_name, img
@@ -75,7 +77,8 @@ class VOCDataLoader:
         mean_std = ([103.939, 116.779, 123.68], [1.0, 1.0, 1.0])
 
         self.input_transform = standard_transforms.Compose([
-            standard_transforms.Resize((256, 256), interpolation=PIL.Image.BILINEAR),
+            standard_transforms.Resize(
+                (256, 256), interpolation=PIL.Image.BILINEAR),
             extended_transforms.FlipChannels(),
             standard_transforms.ToTensor(),
             standard_transforms.Lambda(lambda x: x.mul_(255)),
@@ -83,7 +86,8 @@ class VOCDataLoader:
         ])
 
         self.target_transform = standard_transforms.Compose([
-            standard_transforms.Resize((256, 256), interpolation=PIL.Image.NEAREST),
+            standard_transforms.Resize(
+                (256, 256), interpolation=PIL.Image.NEAREST),
             extended_transforms.MaskToTensor()
         ])
 
@@ -100,46 +104,68 @@ class VOCDataLoader:
             standard_transforms.ToTensor()
         ])
         if self.config.mode == 'random':
-            train_data = torch.randn(self.config.batch_size, self.config.input_channels, self.config.img_size,
-                                     self.config.img_size)
-            train_labels = torch.ones(self.config.batch_size, self.config.img_size, self.config.img_size).long()
+            train_data = torch.randn(
+                self.config.batch_size,
+                self.config.input_channels, self.config.img_size,
+                self.config.img_size)
+            train_labels = torch.ones(
+                self.config.batch_size, self.config.img_size,
+                self.config.img_size).long()
             valid_data = train_data
             valid_labels = train_labels
             self.len_train_data = train_data.size()[0]
             self.len_valid_data = valid_data.size()[0]
 
-            self.train_iterations = (self.len_train_data + self.config.batch_size - 1) // self.config.batch_size
-            self.valid_iterations = (self.len_valid_data + self.config.batch_size - 1) // self.config.batch_size
+            self.train_iterations = (
+                self.len_train_data
+                + self.config.batch_size - 1) // self.config.batch_size
+            self.valid_iterations = (
+                self.len_valid_data
+                + self.config.batch_size - 1) // self.config.batch_size
 
             train = TensorDataset(train_data, train_labels)
             valid = TensorDataset(valid_data, valid_labels)
 
-            self.train_loader = DataLoader(train, batch_size=config.batch_size, shuffle=True)
-            self.valid_loader = DataLoader(valid, batch_size=config.batch_size, shuffle=False)
+            self.train_loader = DataLoader(
+                train, batch_size=config.batch_size, shuffle=True)
+            self.valid_loader = DataLoader(
+                valid, batch_size=config.batch_size, shuffle=False)
 
         elif self.config.mode == 'train':
             train_set = VOC('train', self.config.data_root,
-                            transform=self.input_transform, target_transform=self.target_transform)
+                            transform=self.input_transform,
+                            target_transform=self.target_transform)
             valid_set = VOC('val', self.config.data_root,
-                            transform=self.input_transform, target_transform=self.target_transform)
+                            transform=self.input_transform,
+                            target_transform=self.target_transform)
 
-            self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True,
-                                           num_workers=self.config.data_loader_workers,
-                                           pin_memory=self.config.pin_memory)
-            self.valid_loader = DataLoader(valid_set, batch_size=self.config.batch_size, shuffle=False,
-                                           num_workers=self.config.data_loader_workers,
-                                           pin_memory=self.config.pin_memory)
-            self.train_iterations = (len(train_set) + self.config.batch_size) // self.config.batch_size
-            self.valid_iterations = (len(valid_set) + self.config.batch_size) // self.config.batch_size
+            self.train_loader = DataLoader(
+                train_set, batch_size=self.config.batch_size, shuffle=True,
+                num_workers=self.config.data_loader_workers,
+                pin_memory=self.config.pin_memory)
+            self.valid_loader = DataLoader(
+                valid_set, batch_size=self.config.batch_size, shuffle=False,
+                num_workers=self.config.data_loader_workers,
+                pin_memory=self.config.pin_memory)
+            self.train_iterations = (
+                len(train_set)
+                + self.config.batch_size) // self.config.batch_size
+            self.valid_iterations = (
+                len(valid_set)
+                + self.config.batch_size) // self.config.batch_size
 
         elif self.config.mode == 'test':
             test_set = VOC('test', self.config.data_root,
-                           transform=self.input_transform, target_transform=self.target_transform)
+                           transform=self.input_transform,
+                           target_transform=self.target_transform)
 
-            self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False,
-                                          num_workers=self.config.data_loader_workers,
-                                          pin_memory=self.config.pin_memory)
-            self.test_iterations = (len(test_set) + self.config.batch_size) // self.config.batch_size
+            self.test_loader = DataLoader(
+                test_set, batch_size=self.config.batch_size, shuffle=False,
+                num_workers=self.config.data_loader_workers,
+                pin_memory=self.config.pin_memory)
+            self.test_iterations = (
+                len(test_set)
+                + self.config.batch_size) // self.config.batch_size
 
         else:
             raise Exception('Please choose a proper mode for data loading')
@@ -148,35 +174,27 @@ class VOCDataLoader:
         pass
 
 
-def calculate_weigths_labels():
-    class Config:
-        mode = "train"
+def calculate_weigths_labels(config):
+    class config:
         num_classes = 21
-        batch_size = 32
-        max_epoch = 150
-
-        validate_every = 2
-
-        checkpoint_file = "checkpoint.pth.tar"
 
         data_loader = "VOCDataLoader"
-        data_root = "../data/pascal_voc_seg/"
-        data_loader_workers = 4
-        pin_memory = True
-        async_loading = True
 
     # Create an instance from the data loader
     from tqdm import tqdm
-    data_loader = VOCDataLoader(Config)
-    z = np.zeros((Config.num_classes,))
+    data_loader = VOCDataLoader(config)
+    z = np.zeros((config.num_classes,))
     # Initialize tqdm
-    tqdm_batch = tqdm(data_loader.train_loader, total=data_loader.train_iterations)
+    tqdm_batch = tqdm(data_loader.train_loader,
+                      total=data_loader.train_iterations)
 
     for _, y in tqdm_batch:
         labels = y.numpy().astype(np.uint8).ravel().tolist()
-        z += np.bincount(labels, minlength=Config.num_classes)
+        z += np.bincount(labels, minlength=config.num_classes)
     tqdm_batch.close()
-    # ret = compute_class_weight(class_weight='balanced', classes=np.arange(21), y=np.asarray(labels, dtype=np.uint8))
+    # ret = compute_class_weight(
+    #       class_weight='balanced',
+    #       classes=np.arange(21), y=np.asarray(labels, dtype=np.uint8))
     total_frequency = np.sum(z)
     print(z)
     print(total_frequency)
@@ -187,6 +205,19 @@ def calculate_weigths_labels():
     ret = np.array(class_weights)
     np.save('../pretrained_weights/voc2012_256_class_weights', ret)
     print(ret)
+
+
+def calculate_class_weights(labels, num_classes):
+    """ Calculate the class weights for unbalance data
+    """
+    z = np.bincount(labels, minlength=num_classes)
+    total_frequency = np.sum(z)
+    class_weights = []
+    for frequency in z:
+        class_weight = 1/(np.log(1.02+(frequency/total_frequency)))
+        class_weights.append(class_weight)
+    ret = np.array(class_weights)
+    return ret
 
 
 if __name__ == '__main__':
