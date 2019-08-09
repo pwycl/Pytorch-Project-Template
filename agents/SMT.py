@@ -1,6 +1,7 @@
 import os.path as osp
 import shutil
 
+import numpy as np
 import tqdm
 import torch
 from torch import nn
@@ -21,7 +22,7 @@ class SMTAgent(BaseAgent):
         self.smt_loader = SMTDataLoader(config)
         labels = self.smt_loader.train_loader.dataset.data.y.numpy()
         class_weights=calculate_class_weights(labels=labels)
-        self.class_weights = torch.from_numpy(class_weights)
+        self.class_weights = torch.from_numpy(class_weights.astype(np.float32))
         self.loss = nn.NLLLoss(weight=self.class_weights)
 
         # set cuda flag
