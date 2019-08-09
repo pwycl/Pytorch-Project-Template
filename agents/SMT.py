@@ -19,10 +19,10 @@ class SMTAgent(BaseAgent):
         super().__init__(config)
 
         self.smt_loader = SMTDataLoader(config)
-        class_weights = self.smt_loader.train_loader.dataset.data.y.numpy()
+        labels = self.smt_loader.train_loader.dataset.data.y.numpy()
+        class_weights=calculate_class_weights(labels=labels)
         self.class_weights = torch.from_numpy(class_weights)
-        self.loss = nn.NLLLoss(
-            calculate_class_weights(weight=self.class_weights))
+        self.loss = nn.NLLLoss(weight=self.class_weights)
 
         # set cuda flag
         self.is_cuda = torch.cuda.is_available()

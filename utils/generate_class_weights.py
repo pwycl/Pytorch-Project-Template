@@ -207,7 +207,7 @@ def calculate_weigths_labels(config):
     print(ret)
 
 
-def calculate_class_weights(labels, num_classes):
+def calculate_class_weights(labels, num_classes=None):
     """ Calculate the class weights for unbalance data
     """
     z = np.bincount(labels, minlength=num_classes)
