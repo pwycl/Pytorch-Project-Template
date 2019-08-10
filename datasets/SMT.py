@@ -42,8 +42,9 @@ class SMTDataLoader:
         path = osp.join(osp.dirname(osp.realpath(__file__)),
                         '..', 'data', name)
         try:
-            shutil.copytree(osp.join('../input', name.lower()),
-                            path)
+            if 'SMT' in name:
+                shutil.copytree(osp.join('../input', name.lower()),
+                                path)
         except FileExistsError as e:
             print(e)
 
