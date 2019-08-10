@@ -9,6 +9,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 from utils.misc import print_cuda_statistics
+from utils.metrics import AverageMeter
 from utils.generate_class_weights import calculate_class_weights
 from agents.base import BaseAgent
 from datasets.SMT import SMTDataLoader
@@ -165,24 +166,24 @@ class SMTAgent(BaseAgent):
 
     def evaluate(self, data_loader):
         self.model.eval()
-        test_loss = 0
+        test_loss=AverageMeter()
         correct = 0
         with torch.no_grad():
             for data in data_loader:
                 data = data.to(self.device)
                 output = self.model(data)
-                test_loss += self.loss(
+                cur_loss = self.loss(
                     output,
-                    data.y.view(-1), reduction='sum',).item()
+                    data.y.view(-1)).item()
+                test_loss.update(cur_loss)
                 pred = output.max(1)[1]
                 correct += pred.eq(data.y.view_as(pred)).sum().item()
 
-        test_loss /= len(data_loader.dataset)
         acc = correct/len(data_loader.dataset)
         log_info = ('\nAverage loss: {:.4f}, '
                     'Accuracy: {}/{} ({:.0f}%)\n')
         log_info = log_info.format(
-            test_loss, correct, len(data_loader.dataset),
+            test_loss.val, correct, len(data_loader.dataset),
             100.*acc
         )
         return log_info, acc
