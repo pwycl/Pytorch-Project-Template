@@ -99,7 +99,7 @@ class SMTAgent(BaseAgent):
         if is_best:
             shutil.copyfile(osp.join(self.config.checkpoint_dir, file_name),
                             osp.join(self.config.checkpoint_dir,
-                                     str.join('best_', file_name)))
+                                     'best_'+file_name))
 
     def run_k_folds(self):
         for fold, dataloader in enumerate(
