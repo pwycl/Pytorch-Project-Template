@@ -50,9 +50,7 @@ class SMTAgent(BaseAgent):
     def reset_parameters(self):
         self.model = DiffPool(self.smt_loader.train_loader.dataset,
                               self.config.num_pools, self.config.hidden)
-        if self.cuda:
-            self.model.to(self.device)
-
+        self.model.to(self.device)
         self.optimizer = optim.Adam(
             self.model.parameters(),
             lr=self.config.learning_rate,
@@ -173,10 +171,9 @@ class SMTAgent(BaseAgent):
             for data in data_loader:
                 data = data.to(self.device)
                 output = self.model(data)
-                test_loss += F.nll_loss(
+                test_loss += self.loss(
                     output,
-                    data.y.view(-1), reduction='sum',
-                    weight=self.class_weights).item()
+                    data.y.view(-1), reduction='sum',).item()
                 pred = output.max(1)[1]
                 correct += pred.eq(data.y.view_as(pred)).sum().item()
 
