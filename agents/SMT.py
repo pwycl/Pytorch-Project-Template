@@ -21,7 +21,7 @@ class SMTAgent(BaseAgent):
 
         self.smt_loader = SMTDataLoader(config)
         labels = self.smt_loader.train_loader.dataset.data.y.numpy()
-        class_weights=calculate_class_weights(labels=labels)
+        class_weights = calculate_class_weights(labels=labels)
         self.class_weights = torch.from_numpy(class_weights.astype(np.float32))
         self.loss = nn.NLLLoss(weight=self.class_weights)
 
@@ -38,8 +38,8 @@ class SMTAgent(BaseAgent):
         if self.cuda:
             torch.cuda.manual_seed(self.manual_seed)
             self.device = torch.device('cuda')
-            # self.model=self.model.to(self.device)
             self.loss = self.loss.to(self.device)
+            self.class_weights = self.class_weights.to(self.device)
             self.logger.info("Program will run on *****GPU-CUDA*****")
             print_cuda_statistics()
         else:
