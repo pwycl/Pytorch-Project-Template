@@ -93,6 +93,3 @@ class DiffPool(torch.nn.Module):
         x = F.dropout(x, p=0.5, training=self.training)
         x = self.lin2(x)  # x: [batch_size,dataset.num_classes]
         return F.log_softmax(x, dim=-1)
-
-    # def __repr__(self):
-    #   return self.__class__.__name__
