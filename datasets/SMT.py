@@ -71,7 +71,7 @@ class SMTDataLoader:
         if dataset_div is not None:
             dataset = dataset.shuffle()[:len(dataset)//dataset_div]
 
-        return dataset
+        return dataset.shuffle()
 
     def get_k_fold_indices(self, folds, len_dataset):
         from sklearn.model_selection import StratifiedKFold
