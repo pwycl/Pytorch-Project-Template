@@ -53,12 +53,14 @@ class SMTDataLoader:
 
         if not sparse:
             num_nodes = max_num_nodes = 0
+            limit_num=1000
             for data in dataset:
                 num_nodes += data.num_nodes
                 max_num_nodes = max(data.num_nodes, max_num_nodes)
 
             # Filter out a few really large graphs in order to apply DiffPool
             num_nodes = min(int(num_nodes/len(dataset)), max_num_nodes)
+            num_nodes=max(int(num_nodes/len(dataset)), limit_num)
             self.num_nodes = num_nodes
             indices = []
             for i, data in enumerate(dataset):
